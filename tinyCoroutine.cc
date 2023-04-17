@@ -18,7 +18,7 @@ using coroutineFunction = void(*)(scheduler*, void* ud);
 
 class coroutine{
 public:
-    coroutine(coroutineFunction func, scheduler* sche, void* ud)
+    coroutine(scheduler* sche, coroutineFunction func, void* ud)
         : _func(func)
         , _sche(sche)
         , _ud(ud)
@@ -93,12 +93,12 @@ void closeCo(scheduler* sche){
 }
 
 //创建一个新的协程
-coroutine* newCo(coroutineFunction func, scheduler* sche, void* ud){
+coroutine* newCo(scheduler* sche, coroutineFunction func, void* ud){
     if(sche->_curCo >= sche->_maxCo) {
         std::cout<<"maxCo is reached\n";
         assert(sche->_curCo < sche->_maxCo);
     }
-    coroutine* co = new coroutine(func, sche, ud);
+    coroutine* co = new coroutine(sche, func, ud);
 
     //如果sche中_co有指向null的coroutine指针
     for(int i = 0; i < sche->_curCo; i++){
